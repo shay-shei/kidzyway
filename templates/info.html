@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block extra %}
+    <div class="row justify-content-center mt-3">
+      <div class="col-md-5">
+        <h1 class="text-center">{{ client.name }}</h1>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">Spare Time:</th>
+              <td>{{ format_spare_time(client.spare_time_minutes) }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Parent Name:</th>
+              <td>{{ client.parent_name }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Parent Contact:</th>
+              <td id="coVisitTime">{{ client.parent_contact }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Issue Date</th>
+              <td id="coCurrSpareTime">{{ client.issue_date }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Valid Till</th>
+              <td id="coCurrSpareTime">{{ client.valid_till }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row justify-content-center mb-5">
+      <h2 class="text-center">History</h2>
+      <div class="col-md-8">
+        <table id="history" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Event</th>
+              <th>Event's Spare Time</th>
+              <th>Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in history %}
+            <tr>
+              <td>{{event.date}}</td>
+              <td>{{event.time}}</td>
+              <td>{{event.event}}</td>
+              <td>{{spare_time_ftm(event.event_spare_time_minutes)}}</td>
+              <td>{% if event.comments %}{{event.comments}}{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+
+  <!-- Initialize DataTables -->
+  <script>
+    $(document).ready(function () {
+      $('#history').DataTable({ paging: false, filter: true, ordering: false });
+    });
+  </script>
+{% endblock %}
