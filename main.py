@@ -72,7 +72,7 @@ def main():
         clients_in[-1]["client"] = client.to_dict()
 
     pytz.timezone('Asia/Singapore')
-    all_clients = Client.collection.order("name").filter(status="active").fetch()
+    all_clients = sorted(Client.collection.filter(status="active").fetch(), key=lambda x: x.name)
 
     return render_template("clients.html", clients_in=clients_in, all_clients=all_clients)
 
@@ -255,7 +255,7 @@ def info():
     client["issue_date"] = client["issue_date"].date()
     client["valid_till"] = client["valid_till"].date()
 
-    history = ClientEvent.collection.order("event_timestamp_utc").filter(client_id=client["id"]).fetch()
+    history = sorted(ClientEvent.collection.filter(client_id=client["id"]).fetch(), lambda x: x.event_timestamp_utc)
 
     history_dics = []
     for event in history:
@@ -304,8 +304,8 @@ def icon(name):
 @app.route("/download_backup")
 @auth.login_required
 def download_backup():
-    clients = [x.to_dict() for x in Client.collection.order("name").fetch()]
-    client_events = [x.to_dict() for x in ClientEvent.collection.order("event_timestamp_utc").fetch()]
+    clients = sorted([x.to_dict() for x in Client.collection.fetch()], lambda x: x["name"])
+    client_events = sorted([x.to_dict() for x in ClientEvent.collection.fetch()], lambda x: x["event_timestamp_utc"])
 
     def get_csv(records):
         output = StringIO()
