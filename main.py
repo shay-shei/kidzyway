@@ -304,8 +304,8 @@ def icon(name):
 @app.route("/download_backup")
 @auth.login_required
 def download_backup():
-    clients = list(Client.select().dicts())
-    client_events = list(ClientEvent.select().dicts())
+    clients = [x.to_dict() for x in Client.collection.order("name").fetch()]
+    client_events = [x.to_dict() for x in ClientEvent.collection.order("event_timestamp_utc").fetch()]
 
     def get_csv(records):
         output = StringIO()
