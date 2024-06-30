@@ -255,7 +255,7 @@ def info():
     client["issue_date"] = client["issue_date"].date()
     client["valid_till"] = client["valid_till"].date()
 
-    history = sorted(ClientEvent.collection.filter(client_id=client["id"]).fetch(), lambda x: x.event_timestamp_utc)
+    history = sorted(ClientEvent.collection.filter(client_id=client["id"]).fetch(), key=lambda x: x.event_timestamp_utc)
 
     history_dics = []
     for event in history:
@@ -304,8 +304,8 @@ def icon(name):
 @app.route("/download_backup")
 @auth.login_required
 def download_backup():
-    clients = sorted([x.to_dict() for x in Client.collection.fetch()], lambda x: x["name"])
-    client_events = sorted([x.to_dict() for x in ClientEvent.collection.fetch()], lambda x: x["event_timestamp_utc"])
+    clients = sorted([x.to_dict() for x in Client.collection.fetch()], key=lambda x: x["name"])
+    client_events = sorted([x.to_dict() for x in ClientEvent.collection.fetch()], key=lambda x: x["event_timestamp_utc"])
 
     def get_csv(records):
         output = StringIO()
